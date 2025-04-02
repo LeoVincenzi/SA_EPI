@@ -21,7 +21,7 @@ king_coef=c("/gpfs/data/fs71407/magdazeb/application/ukb-structure/application/e
 ###   ------------------------------------   
 
 # https://github.com/Richard-Packer/DeepPheWAS/blob/main/R/data_preparation.R 
-
+#The function itself is used to filter data about 'non-cancer diagnosis' and 'self-operation'
 SR_data_out <-  function(a,b,c,d,e,f) {
   . <- NULL
   if (b=="NC") {
@@ -63,11 +63,11 @@ SR_data_out <-  function(a,b,c,d,e,f) {
 }
 
 ###  ------------  no exclusions
-
+#Insert eventual ID to eclude
 exclusions <- data.frame(V1=NA) %>%
       dplyr::pull()
 
-
+#read the min-data table and collect the column names
 # min_data
   if(!is.null(min_data)){
     if(!file.exists(min_data)){
@@ -85,7 +85,7 @@ exclusions <- data.frame(V1=NA) %>%
 # UK Biobank self-reported non-cancer diagnosis  --------------------------------------
   # self-report non-cancer codes
 
-
+#Separately save the columns 53, 20002.*, 20008.*. It also saves the number of visits in a vector on which the function mapply is applied, returning a vector with the ordered dates. Everything is then added to the final dataframe.
 if(length(stringr::str_which(available_tab_data,"^20002-"))>0 & length(stringr::str_which(available_tab_data,"^20008-"))>0 & length(stringr::str_which(available_tab_data,"^53-"))>0) {
 
       assesment_centre_date <- tab_data %>%
@@ -104,7 +104,7 @@ if(length(stringr::str_which(available_tab_data,"^20002-"))>0 & length(stringr::
       all_phenotype_data <- all_phenotype_data  %>%
         dplyr::bind_rows(SR_NC_data)
     }
-
+#Separately save the columns 53, 20004.*, 200010.*. It also saves the number of visits in a vector on which the function mapply is applied, returning a vector with the ordered dates. Everything is then added to the final dataframe.
 # UK Biobank self-report operations  -----------------------------------------------------------
     if(length(stringr::str_which(available_tab_data,"^20004-"))>0 & length(stringr::str_which(available_tab_data,"^20010-"))>0 & length(stringr::str_which(available_tab_data,"^53-"))>0) {
       assesment_centre_date <- tab_data %>%
@@ -124,7 +124,7 @@ if(length(stringr::str_which(available_tab_data,"^20002-"))>0 & length(stringr::
         dplyr::bind_rows(SR_OP_data)
     }
 
-
+#Separately save the columns 40005 and 40006, save the dates and the codes and add it to the final dataframe
 # Cancer_registry ---------------------------------------------------------
 if(length(stringr::str_which(available_tab_data,"^40005-"))>0 & length(stringr::str_which(available_tab_data,"^40006-"))>0) {
       # date
